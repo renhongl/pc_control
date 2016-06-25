@@ -5,6 +5,7 @@
 import searchTool, readEmail, time, sendEmail, screenshot
 import smtplib, os
 from threading import Timer
+from constant import Constant as C
 
 class Main(object):
 
@@ -16,8 +17,8 @@ class Main(object):
         self.searchPath = searchPath
 
     def __testSearchTool(self):
-        searchPath = "d:\\"
-        searchFile = ".mp4"
+        searchPath = C.SEARCH_PATH
+        searchFile = C.SEARCH_FILE
         searchName = False
         if len(searchFile.split(".")) == 1:
             searchName = True
@@ -25,22 +26,22 @@ class Main(object):
         st.parsePath(st.searchPath)
 
     def __testReadEmail(self):
-        email = "liang_renhong@163.com"
-        pwd = "111621116"
-        pop3_server = "pop.163.com"
-        searchPath = "d:\\"
+        email = C.EMAIL_126
+        pwd = C.PWD
+        pop3_server = C.POP3_126_SERVER
+        searchPath = C.SEARCH_PATH
         re = readEmail.ReadEmail(email, pwd, pop3_server, searchPath)
         content = re.downloadEmail()
         msg = re.parseContent(content)
         re.print_info(msg)
 
     def __testSendEmail(self):
-        from_addr = "liang_renhong@163.com"
-        password = "111621116"
-        to_addr = "1075220132@qq.com"
-        smtp_server = "smtp.163.com"
-        subject = "test send email"
-        attachs = ["C:/Users/renhongl/Desktop/PC/screenshot/1466393638.png", "C:/Users/renhongl/Desktop/PC/screenshot/1466393650.png"]
+        from_addr = C.EMAIL_126
+        password = C.PWD
+        to_addr = C.EMAIL_QQ
+        smtp_server = C.SMTP_126_SERVER
+        subject = C.TEST_SUBJECT
+        attachs = C.TEST_ATTACHS
         se = sendEmail.SendEmail(from_addr, password, to_addr, smtp_server, subject, attachs)
         se.send()
 
@@ -55,8 +56,9 @@ class Main(object):
         content = re.downloadEmail()
         msg = re.parseContent(content)
         re.print_info(msg)
-        t = Timer(main.timer_interval, self.run)
-        t.start()
+        if C.INTERVAL:
+            t = Timer(main.timer_interval, self.run)
+            t.start()
         #**********************************************
 
         #************Test case*************************
@@ -66,11 +68,11 @@ class Main(object):
         #sself.__testScreenshot()
         #**********************************************
 
-timer_interval = 60 * 60
-email = "liang_renhong@163.com"
-pwd = "111621116"
-pop3_server = "pop.163.com"
-searchPath = "e:\\"
+timer_interval = C.MAIN_INTERVAL
+email = C.EMAIL_126
+pwd = C.PWD
+pop3_server = C.POP3_126_SERVER
+searchPath = C.SEARCH_PATH
 
 main = Main(timer_interval, email, pwd, pop3_server, searchPath)
 main.run()

@@ -7,18 +7,22 @@ from email.header import decode_header
 from email.utils import parseaddr
 import poplib, threading, searchTool, os, screenshot, sendEmail
 import threading
+from constant import Constant as C
 
 class ReadEmail(object):
 
     def __sendData(self):
-        pathFile = self.abspath + "/path.txt"
+        # pathFile = self.abspath + "/path.txt"
+        pathFile = os.path.join(self.abspath, C.URL_PATH)
+       
+
         with open(pathFile, "r") as f:
             count = 0
             for line in f:
                 if int(self.from_index) <= count <= int(self.end_index):
                     path = line.split(" : ")[1]
                     path = path.replace("\n","")
-                    path = path.replace("\\","/")
+                    #path = path.replace("\\","/")
                     self.attachs.append(path)
                 count += 1
         
@@ -27,11 +31,11 @@ class ReadEmail(object):
         print(self.attachs)
         print("**********************************************")
 
-        from_addr = "liang_renhong@163.com"
-        password = "111621116"
-        to_addr = "1075220132@qq.com"
-        smtp_server = "smtp.163.com"
-        subject = "PC Data"
+        from_addr = C.EMAIL_126
+        password = C.PWD
+        to_addr = C.EMAIL_QQ
+        smtp_server = C.SMTP_126_SERVER
+        subject = C.TEST_SUBJECT
         attachs = self.attachs
         se = sendEmail.SendEmail(from_addr, password, to_addr, smtp_server, subject, attachs)
         se.send()
@@ -40,14 +44,16 @@ class ReadEmail(object):
         searchPath = self.searchPath
         searchFile = self.content
 
-        if searchFile == "None":
+        if searchFile == C.MSG_NONE:
             print("Do nothing...")
             return
-        if searchFile == "shutdown":
+
+        if searchFile == C.MSG_SHUTDOWN:
             print("System will be shutdown...")
-            os.system("shutdown /p")
+            os.system(C.CMD_SHUTDOWN)
             return
-        if searchFile == "screenshot":
+
+        if searchFile == C.MSG_SCREENSHOT:
             print("Taking a screenshot...")
             ss = screenshot.ScreenShot()
             ss.grab()
@@ -56,9 +62,10 @@ class ReadEmail(object):
         searchName = False
         if len(searchFile.split(".")) == 1:
             searchName = True
-        #.mp3,3,4
+
         commands = searchFile.split(",")
         name = commands[0]
+
         if len(commands) > 1:
             self.from_index = commands[1]
             self.end_index = commands[2]
@@ -122,10 +129,12 @@ class ReadEmail(object):
                         hdr, addr = parseaddr(value)
                         name = self.__decode_str(hdr)
                         value = u'%s <%s>' % (name, addr)
+
         if (msg.is_multipart()):
             parts = msg.get_payload()
             for n, part in enumerate(parts):
                 self.print_info(part, indent + 1)
+                
         else:
             content_type = msg.get_content_type()
             if content_type=='text/plain':

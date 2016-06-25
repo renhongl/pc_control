@@ -5,7 +5,9 @@
 import smtplib, os
 from email.mime.multipart import MIMEMultipart  
 from email.mime.text import MIMEText  
-from email.mime.image import MIMEImage  
+from email.mime.image import MIMEImage
+from constant import Constant as C
+from email.header import Header 
 
 class SendEmail(object):
 
@@ -18,17 +20,19 @@ class SendEmail(object):
         self.attachs = attachs
 
     def send(self):
-        if len(self.attachs) != 0:
+        if len(self.attachs) != 0 and len(self.attachs) != 1:
             msg = MIMEMultipart()
             msg['From'] = self.from_addr
             msg['To'] = self.to_addr
             msg['Subject'] = self.subject
+
             for attach in self.attachs:
-                msg.attach(MIMEText(os.path.split(attach)[1] + " ", 'plain', 'utf-8'))
+                msg.attach(MIMEText(",", 'plain', 'utf-8'))
                 att = MIMEText(open(attach, 'rb').read(), 'base64', 'utf-8')
                 att["Content-Type"] = 'application/octet-stream'
                 att["Content-Disposition"] = 'attachment; filename=' + os.path.split(attach)[1]
                 msg.attach(att)
+
             try:
                 print("Sending an email...")
                 server = smtplib.SMTP(self.smtp_server)
@@ -38,5 +42,20 @@ class SendEmail(object):
                 print("Sending Success")
             except:
                 print("Fail")
+
         else:
-            print("TODO send text email")
+            sender = self.from_addr
+            receiver = self.to_addr
+            subject = 'test'  
+            smtpserver = self.smtp_server
+            msg = MIMEText('test','plain','utf-8')  
+            msg['Subject'] = Header(subject, 'utf-8')  
+            msg['From'] = self.from_addr
+            msg['To'] = self.to_addr
+            print("Sending")
+            smtp = smtplib.SMTP()  
+            smtp.connect(self.smtp_server)  
+            smtp.login(self.from_addr, self.password)  
+            smtp.sendmail(sender, receiver, msg.as_string())  
+            smtp.quit()
+            print("Success")
