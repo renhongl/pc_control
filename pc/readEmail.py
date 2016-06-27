@@ -12,25 +12,19 @@ from constant import Constant as C
 class ReadEmail(object):
 
     def __sendData(self):
-        # pathFile = self.abspath + "/path.txt"
         pathFile = os.path.join(self.abspath, C.URL_PATH)
-       
 
         with open(pathFile, "r") as f:
-            count = 0
+            count = 1
             for line in f:
                 if int(self.from_index) <= count <= int(self.end_index):
                     path = line.split(" : ")[1]
                     path = path.replace("\n","")
-                    #path = path.replace("\\","/")
                     self.attachs.append(path)
                 count += 1
         
         self.attachs.append(pathFile)
-        print("************* Sending PC Data ******************")
-        print(self.attachs)
-        print("**********************************************")
-
+        
         from_addr = C.EMAIL_126
         password = C.PWD
         to_addr = C.EMAIL_QQ
@@ -43,6 +37,9 @@ class ReadEmail(object):
     def __controlByContent(self):
         searchPath = self.searchPath
         searchFile = self.content
+        searchName = False
+        commands = searchFile.split(",")
+        name = commands[0]
 
         if searchFile == C.MSG_NONE:
             print("Do nothing...")
@@ -59,19 +56,15 @@ class ReadEmail(object):
             ss.grab()
             return
 
-        searchName = False
         if len(searchFile.split(".")) == 1:
             searchName = True
-
-        commands = searchFile.split(",")
-        name = commands[0]
 
         if len(commands) > 1:
             self.from_index = commands[1]
             self.end_index = commands[2]
         else:
-            self.from_index = 0
-            self.end_index = 5
+            self.from_index = C.DEFAULT_FROM
+            self.end_index = C.DEFAULT_END
 
         st = searchTool.SearchTool(searchPath, name, searchName)
         print("Search %s : " % name)

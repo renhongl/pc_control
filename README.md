@@ -1,2 +1,2 @@
 # pythonProject
-All python projects 
+PC: 电脑远程控制工具。

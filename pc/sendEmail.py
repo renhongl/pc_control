@@ -2,7 +2,7 @@
 
 'Send an email, the content is you need'
 
-import smtplib, os
+import smtplib, os, logging
 from email.mime.multipart import MIMEMultipart  
 from email.mime.text import MIMEText  
 from email.mime.image import MIMEImage
@@ -20,14 +20,14 @@ class SendEmail(object):
         self.attachs = attachs
 
     def send(self):
-        if len(self.attachs) != 0 and len(self.attachs) != 1:
+        if len(self.attachs) != 0:
             msg = MIMEMultipart()
             msg['From'] = self.from_addr
             msg['To'] = self.to_addr
             msg['Subject'] = self.subject
 
             for attach in self.attachs:
-                msg.attach(MIMEText(",", 'plain', 'utf-8'))
+                msg.attach(MIMEText("", 'plain', 'utf-8'))
                 att = MIMEText(open(attach, 'rb').read(), 'base64', 'utf-8')
                 att["Content-Type"] = 'application/octet-stream'
                 att["Content-Disposition"] = 'attachment; filename=' + os.path.split(attach)[1]
@@ -40,7 +40,8 @@ class SendEmail(object):
                 server.sendmail(self.from_addr, [self.to_addr], msg.as_string())
                 server.quit()
                 print("Sending Success")
-            except:
+            except Exception as e:
+                logging.exception("554")
                 print("Fail")
 
         else:
@@ -48,11 +49,11 @@ class SendEmail(object):
             receiver = self.to_addr
             subject = 'test'  
             smtpserver = self.smtp_server
-            msg = MIMEText('test','plain','utf-8')  
+            msg = MIMEText('No attachment found.','plain','utf-8')  
             msg['Subject'] = Header(subject, 'utf-8')  
             msg['From'] = self.from_addr
             msg['To'] = self.to_addr
-            print("Sending")
+            print("Sending no attachment email...")
             smtp = smtplib.SMTP()  
             smtp.connect(self.smtp_server)  
             smtp.login(self.from_addr, self.password)  

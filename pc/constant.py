@@ -10,15 +10,17 @@ class Constant(object):
     SEARCH_FILE = ".mp4"
     EMAIL_QQ = "1075220132@qq.com"
     SMTP_126_SERVER = "smtp.126.com"
-    TEST_SUBJECT = "test send email"
+    TEST_SUBJECT = "Data"
     TEST_ATTACHS = []
-    MAIN_INTERVAL = 60 * 6000
+    MAIN_INTERVAL = 60 * 10
     INTERVAL = False
-    URL_PATH = "url.txt"
+    URL_PATH = "path.txt"
     SCREEN_IMG = "ss.png"
     SCREEN_DIR = "./ss"
     MSG_SHUTDOWN = "shutdown"
     MSG_NONE = "None"
     MSG_SCREENSHOT = "screenshot"
     CMD_SHUTDOWN = "shutdown /p"
+    DEFAULT_FROM = 1
+    DEFAULT_END = 5
 

